@@ -30,3 +30,7 @@ export default class Ship {
         return this.hits >= this.length;
     }
 }
+
+export function createShip(name, length) {
+    return new Ship(name, length);
+}

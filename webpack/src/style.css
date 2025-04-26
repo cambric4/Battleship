@@ -1,0 +1,170 @@
+/* Global styles */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #e0f7fa;
+  margin: 0;
+  padding: 20px;
+  text-align: center;
+}
+
+h1 {
+  margin-bottom: 20px;
+}
+
+#message {
+  font-size: 1.2em;
+  margin-top: 20px;
+  min-height: 24px;
+  color: #004d40;
+}
+
+/* Flex container for boards */
+.boards {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 40px;
+  margin-bottom: 20px;
+}
+
+/* Individual board container */
+.board-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 320px;
+  flex: 1;
+}
+
+/* Board grid */
+.board {
+  display: grid;
+  grid-template-columns: repeat(10, 32px);
+  grid-template-rows: repeat(10, 32px);
+  gap: 2px;
+  background-color: #00796b;
+  padding: 12px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.cell {
+  width: 32px;
+  height: 32px;
+  background-color: #ffffff;
+  border: 1px solid #004d40;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.cell.ship {
+  background-color: #b2dfdb;
+}
+
+.cell.hit {
+  background-color: #e57373;
+}
+
+.cell.miss {
+  background-color: #81d4fa;
+}
+
+/* Hover effects */
+.board:not(.disabled) .cell:hover {
+  background-color: #c8e6c9;
+}
+
+/* Responsive adjustments */
+
+/* Tablets and smaller laptops */
+@media (max-width: 1200px) {
+  .board {
+    grid-template-columns: repeat(10, 28px);
+    grid-template-rows: repeat(10, 28px);
+  }
+
+  .cell {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+/* Mobile devices */
+@media (max-width: 768px) {
+  .boards {
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+  }
+
+  .board {
+    grid-template-columns: repeat(10, 24px);
+    grid-template-rows: repeat(10, 24px);
+  }
+
+  .cell {
+    width: 24px;
+    height: 24px;
+  }
+
+  #message {
+    font-size: 1em;
+  }
+}
+
+/* Small phones */
+@media (max-width: 480px) {
+  .board {
+    grid-template-columns: repeat(10, 20px);
+    grid-template-rows: repeat(10, 20px);
+  }
+
+  .cell {
+    width: 20px;
+    height: 20px;
+  }
+
+  #message {
+    font-size: 0.9em;
+  }
+}
+/* Reset button styles */
+#reset-button {
+    margin-top: 30px;
+    padding: 12px 24px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #ffffff;
+    background-color: #00796b;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+  }
+  
+  #reset-button:hover {
+    background-color: #004d40;
+    transform: scale(1.05);
+  }
+  
+  #reset-button:active {
+    transform: scale(0.95);
+  }
+
+.fade-out {
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+  
+  .fade-in {
+    opacity: 1;
+    transition: opacity 0.5s ease;
+  }
+    
