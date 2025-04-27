@@ -1,71 +1,86 @@
-import Ship from "./ship.js";
-
 class GameBoard {
     constructor() {
         this.size = 10;
-        this.board = Array(10)
-            .fill(null)
-            .map(() => Array(10).fill(null));
+        this.board = Array(10).fill(null).map(() => Array(10).fill(null)); // 10x10 board
         this.missedAttacks = [];
         this.ships = [];
     }
 
-    /**
-    * @param {Ship} ship - The ship to place.
-    * @param {number} row - Starting row coordinate.
-    * @param {number} col - Starting column coordinate.
-    * @param {string} direction - 'horizontal' or 'vertical'.
-    * @returns {Boolean} True if placement was successful, false otherwise.
-    */
+    // Place a ship on the board
     placeShip(ship, row, col, direction = 'horizontal') {
-        if (!this.isValidPlacement(ship.length, row, col, direction)) return false;
+        if (!this.isValidPlacement(ship.length, row, col, direction)) {
+            console.log("Placement failed for ship: " + ship.name);
+            return false; // Failed placement
+        }
 
+        let shipSegments = [];
         for (let i = 0; i < ship.length; i++) {
             const r = direction === 'horizontal' ? row : row + i;
             const c = direction === 'horizontal' ? col + i : col;
-            this.board[r][c] = ship;  // Place the ship on the board
+            this.board[r][c] = ship; // Place ship at the coordinates
+            shipSegments.push([r, c]); // Record the ship's segments
         }
 
-        this.ships.push(ship);  // Add ship to the ships array
-        return true;
+        ship.setSegments(shipSegments); // Pass ship segments to the ship object
+        this.ships.push(ship); // Add ship to the list of ships
+        console.log(`${ship.name} placed at (${row}, ${col})`);
+        return true; // Successfully placed
     }
 
-    /**
-     * @param {number} length - The length of the ship to place.
-     * @param {number} row - Starting row coordinate.
-     * @param {number} col - Starting column coordinate.
-     * @param {string} direction - 'horizontal' or 'vertical'.
-     * @returns {Boolean} True if the ship can be placed, false otherwise.
-     */
+    // Check if placement is valid
     isValidPlacement(length, row, col, direction) {
-        // Check if the ship fits on the board
-        if (direction === 'horizontal' && col + length > this.size) return false;
-        if (direction === 'vertical' && row + length > this.size) return false;
-
-        // Check if the ship overlaps with any existing ships
-        for (let i = 0; i < length; i++) {
-            const r = direction === 'horizontal' ? row : row + i;
-            const c = direction === 'horizontal' ? col + i : col;
-            if (this.board[r][c] !== null) return false;  // Spot is already occupied
+        if (direction === 'horizontal') {
+            if (col + length > this.size) {
+                console.log("Invalid: Ship exceeds board size horizontally");
+                return false;
+            }
+            for (let i = 0; i < length; i++) {
+                if (this.board[row][col + i] !== null) {
+                    console.log(`Invalid: Position (${row}, ${col + i}) is already occupied`);
+                    return false;
+                }
+            }
+        } else {
+            if (row + length > this.size) {
+                console.log("Invalid: Ship exceeds board size vertically");
+                return false;
+            }
+            for (let i = 0; i < length; i++) {
+                if (this.board[row + i][col] !== null) {
+                    console.log(`Invalid: Position (${row + i}, ${col}) is already occupied`);
+                    return false;
+                }
+            }
         }
         return true;
     }
 
-    /**
-     * @param {number} row - The row of the attack.
-     * @param {number} col - The column of the attack.
-     * @returns {Boolean} True if it was a hit, false if it was a miss.
-     */
+    // Receive an attack at a specific row and column
     receiveAttack(row, col) {
-        const target = this.board[row][col];
-        if (target instanceof Ship) {
-            target.hit();  // Ship is hit
-            return true;
+        const ship = this.board[row][col];
+        if (ship === null) {
+            // Missed attack
+            this.missedAttacks.push([row, col]);
+            console.log(`Miss at (${row}, ${col})`);
+            return false; // Miss
+        } else {
+            // Mark the hit on the ship
+            let hitSuccessful = ship.hit(row, col); // Use row and col for better precision
+
+            if (hitSuccessful) {
+                console.log(`Hit on ship at (${row}, ${col})`);
+
+                // Check if the ship is sunk
+                if (ship.isSunk()) {
+                    console.log(`Ship ${ship.name} is sunk!`);
+                }
+                return true; // Hit
+            }
         }
-        this.missedAttacks.push([row, col]);  // Record miss
-        return false;
+        return null; // Spot has already been attacked
     }
 
+    // Check if all ships are sunk
     allShipsSunk() {
         return this.ships.every(ship => ship.isSunk());
     }
@@ -73,15 +88,14 @@ class GameBoard {
     getBoard() {
         return this.board;
     }
-    clearBoard() {
-        this.board = Array.from({ length: 10 }, () => Array(10).fill(null));
-        this.ships = [];
-      }      
-}
 
-// Gameboard factory function
-export function gameboardFactory() {
+    clearBoard() {
+        this.board = Array(this.size).fill(null).map(() => Array(this.size).fill(null));
+        this.missedAttacks = []; // Optionally reset missed attacks as well
+    }
+}
+function gameboardFactory() {
     return new GameBoard();
 }
 
-export default GameBoard;
+export { gameboardFactory, GameBoard };

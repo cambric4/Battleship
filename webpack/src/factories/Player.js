@@ -1,8 +1,11 @@
+import { GameBoard } from "./GB.js";
+
 export default class Player {
     constructor(name = 'Player', isComputer = false) {
         this.name = name;
         this.isComputer = isComputer;
         this.previousAttacks = new Set();  // Keeps track of previous attacks to prevent duplicates
+        this.attackedCells = [];  // Initialize attackedCells as an empty array
     }
 
     /**
@@ -12,16 +15,21 @@ export default class Player {
      * @param {number} col - The column to attack.
      * @returns {Boolean|null} - Returns true if it's a hit, false if it's a miss, or null if the spot has already been attacked.
      */
-    attack(enemyBoard, row, col) {
-        const key = `${row},${col}`;  // Unique identifier for the attack based on row and column
-        if (this.previousAttacks.has(key)) return null;  // Return null if the player has already attacked this spot
-
-        this.previousAttacks.add(key);  // Add the attack to the history
-
-        // Return the result of the attack (true for hit, false for miss)
-        return enemyBoard.receiveAttack(row, col);
-    }
-
+    attack(board, row, col) {
+        // Check if the cell has already been attacked (using Set correctly)
+        if (this.previousAttacks.has(`${row},${col}`)) {
+            console.log(`You have already attacked this spot (${row}, ${col}).`);
+            return null;  // Already attacked this spot
+        }
+    
+        // Mark this cell as attacked
+        this.previousAttacks.add(`${row},${col}`);
+    
+        const result = board.receiveAttack(row, col);  // Pass the attack to the board
+        console.log(`Attack at (${row}, ${col}) result: ${result ? 'Hit' : 'Miss'}`);
+        return result;  // Return true/false depending on whether it was a hit or miss
+    }    
+  
     /**
      * Perform a random attack on the enemy board.
      * @param {GameBoard} enemyBoard - The opponent's GameBoard instance.

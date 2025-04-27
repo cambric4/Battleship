@@ -15,6 +15,7 @@ body {
 
 h1 {
   margin-bottom: 20px;
+  color: #00796b;  /* Add some color to the heading for consistency */
 }
 
 #message {
@@ -55,30 +56,56 @@ h1 {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.cell {
-  width: 32px;
-  height: 32px;
-  background-color: #ffffff;
-  border: 1px solid #004d40;
-  cursor: pointer;
-  transition: background-color 0.2s;
+/* Style for the board container */
+#board-container {
+    display: grid;
+    grid-template-columns: repeat(10, 30px); /* 10 columns, each 30px wide */
+    grid-template-rows: repeat(10, 30px); /* 10 rows, each 30px high */
+    gap: 1px; /* Space between cells */
+    margin: 20px auto; /* Centering the board on the page */
+    width: max-content;
+  }
+  
+  /* Style for each grid cell */
+  .cell {
+    width: 30px;
+    height: 30px;
+    background-color: #f0f0f0;
+    border: 1px solid #000;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
 }
 
+  
+  /* Optional: Highlight a cell when hovered over */
+  .cell:hover {
+    background-color: #d3d3d3; /* Slightly darker gray on hover */
+  }
+  
+  /* Optional: Style for when a cell is clicked (example) */
+  .cell.selected {
+    background-color: #3498db; /* Blue color for selected cells */
+  }
+  
+
 .cell.ship {
-  background-color: #b2dfdb;
+  background-color: #b2dfdb; /* Light teal for ships */
 }
 
 .cell.hit {
-  background-color: #e57373;
+  background-color: #e57373; /* Light red for hits */
 }
 
 .cell.miss {
-  background-color: #81d4fa;
+  background-color: #81d4fa; /* Light blue for misses */
 }
 
 /* Hover effects */
 .board:not(.disabled) .cell:hover {
-  background-color: #c8e6c9;
+  background-color: #c8e6c9; /* Light green on hover */
 }
 
 /* Responsive adjustments */
@@ -135,36 +162,37 @@ h1 {
     font-size: 0.9em;
   }
 }
+
 /* Reset button styles */
 #reset-button {
-    margin-top: 30px;
-    padding: 12px 24px;
-    font-size: 1rem;
-    font-weight: bold;
-    color: #ffffff;
-    background-color: #00796b;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
-  }
-  
-  #reset-button:hover {
-    background-color: #004d40;
-    transform: scale(1.05);
-  }
-  
-  #reset-button:active {
-    transform: scale(0.95);
-  }
+  margin-top: 30px;
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #ffffff;
+  background-color: #00796b;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
 
+#reset-button:hover {
+  background-color: #004d40;
+  transform: scale(1.05);
+}
+
+#reset-button:active {
+  transform: scale(0.95);
+}
+
+/* Fade-in/fade-out transitions */
 .fade-out {
-    opacity: 0;
-    transition: opacity 0.5s ease;
-  }
-  
-  .fade-in {
-    opacity: 1;
-    transition: opacity 0.5s ease;
-  }
-    
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.fade-in {
+  opacity: 1;
+  transition: opacity 0.5s ease;
+}
