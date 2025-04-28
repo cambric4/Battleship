@@ -25,10 +25,12 @@ export default class Player {
         // Mark this cell as attacked
         this.previousAttacks.add(`${row},${col}`);
     
-        const result = board.receiveAttack(row, col);  // Pass the attack to the board
+        // Pass the attack to the board
+        const result = board.receiveAttack(row, col);  // Call to GameBoard's receiveAttack
         console.log(`Attack at (${row}, ${col}) result: ${result ? 'Hit' : 'Miss'}`);
         return result;  // Return true/false depending on whether it was a hit or miss
-    }    
+    }
+      
   
     /**
      * Perform a random attack on the enemy board.

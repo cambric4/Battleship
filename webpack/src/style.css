@@ -66,6 +66,7 @@ h1 {
     width: max-content;
   }
   
+  
   /* Style for each grid cell */
   .cell {
     width: 30px;
@@ -92,7 +93,7 @@ h1 {
   
 
 .cell.ship {
-  background-color: #b2dfdb; /* Light teal for ships */
+  background-color: teal; /* Light teal for ships */
 }
 
 .cell.hit {

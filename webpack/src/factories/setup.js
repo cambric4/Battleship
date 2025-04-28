@@ -3,32 +3,36 @@ import { GameBoard } from './GB.js';
 import  Player from './Player.js';
 
 // Ensure this function is defined before you use it.
-export function drawBoard(boardElement, gameBoard) {
+export function drawBoard(boardElement, gameBoard, isEnemy = false) {
     const cells = boardElement.querySelectorAll(".cell");
     let cellIndex = 0;
 
-    // Loop over the board's rows and columns to render cells
     for (let row = 0; row < gameBoard.size; row++) {
         for (let col = 0; col < gameBoard.size; col++) {
             const cell = cells[cellIndex];
             const ship = gameBoard.board[row][col];
 
-            // Apply classes to cells based on their state
+            // Reset classes
+            cell.classList.remove('ship', 'hit', 'miss');
+
             if (ship) {
-                cell.classList.add("ship"); // Ship present in this cell
-            } else {
-                cell.classList.remove("ship");
+                cell.classList.add('ship');
             }
 
-            // Mark hit or miss
-            if (gameBoard.missedAttacks.some(([r, c]) => r === row && c === col)) {
-                cell.classList.add("miss");
+            // Check if it's a hit (only for enemy board)
+            if (isEnemy && ship && ship.isHitAt(row, col)) {
+                cell.classList.add('hit');
+            }
+            // Check for missed attacks
+            else if (gameBoard.missedAttacks.some(([r, c]) => r === row && c === col)) {
+                cell.classList.add('miss');
             }
 
             cellIndex++;
         }
     }
 }
+
 
 let player = new Player('Player1');
 let enemyBoard = new GameBoard;
@@ -82,7 +86,7 @@ export function setupPlayerBoard(boardElement, playerBoard) {
  * @param {GameBoard} board - The GameBoard instance to draw.
  */
 export function createBoard(boardElement, boardArray, isEnemy = false) {
-    boardElement.innerHTML = '';  // Clear the board before adding new cells
+    boardElement.innerHTML = ''; // Clear the board
 
     for (let row = 0; row < 10; row++) {
         for (let col = 0; col < 10; col++) {
@@ -91,41 +95,18 @@ export function createBoard(boardElement, boardArray, isEnemy = false) {
             cell.dataset.row = row;
             cell.dataset.col = col;
 
-            // If it's the enemy board, you might want to hide ship positions
-            if (isEnemy) {
-                const ship = boardArray[row][col];
-                if (ship !== null && ship.name) {
-                    cell.classList.add('ship'); // Mark the ship on the enemy board, if necessary
-                }
+            const cellData = boardArray[row][col];
+
+            // Show hit/miss status
+            if (cellData?.isHit) {
+                cell.classList.add('hit');
+            } else if (cellData?.isMiss) {
+                cell.classList.add('miss');
+            } else if (!isEnemy && cellData?.hasShip) {
+                cell.classList.add('ship'); // Optional: Show player's ships
             }
 
-            // Add click event to attack
-            cell.addEventListener('click', () => {
-                if (!isEnemy) return;  // Don't allow clicks on the player's board during the game
-
-                const row = parseInt(cell.dataset.row);
-                const col = parseInt(cell.dataset.col);
-
-                const result = player.attack(enemyBoard, row, col);  // Player's attack
-
-                if (result === null) {
-                    messageElement.textContent = "You already attacked that spot!";
-                } else if (result) {
-                    cell.classList.add('hit');
-                    messageElement.textContent = "Hit!";
-                } else {
-                    cell.classList.add('miss');
-                    messageElement.textContent = "Miss!";
-                }
-
-                if (enemyBoard.allShipsSunk()) {
-                    messageElement.textContent = "You won!";
-                } else {
-                    computerMove();  // Computer's turn
-                }
-            });
-
-            boardElement.appendChild(cell);  // Add the cell to the board
+            boardElement.appendChild(cell);
         }
     }
 }
