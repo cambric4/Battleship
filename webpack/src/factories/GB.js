@@ -1,4 +1,4 @@
-class GameBoard {
+export class GameBoard {
     constructor() {
         this.size = 10;
         this.board = Array(10).fill(null).map(() => Array(10).fill(null)); // 10x10 board
@@ -6,7 +6,7 @@ class GameBoard {
         this.ships = [];
         this.areAllShipsSunk = false;  // Flag to track if all ships are sunk
     }
-
+    
     // Place a ship on the board
     placeShip(ship, row, col, direction = 'horizontal') {
         if (!this.isValidPlacement(ship.length, row, col, direction)) {
@@ -92,11 +92,13 @@ class GameBoard {
 
     // Check if all ships are sunk
     allShipsSunk() {
+        console.log(this.ships)
         return this.ships.every(ship => ship.isSunk());
     }
 
     // Update the boards based on the ship statuses
     updateBoards() {
+        console.log('ships updated')
         if (this.allShipsSunk()) {
             this.areAllShipsSunk = true; // Correctly set the flag
             this.displayEnemyBoard(); // Reveal the enemy board when all ships are sunk
@@ -167,4 +169,4 @@ function gameboardFactory() {
     return new GameBoard();
 }
 
-export { gameboardFactory, GameBoard };
+export { gameboardFactory };

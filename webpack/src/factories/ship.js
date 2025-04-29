@@ -14,6 +14,7 @@ export class Ship {
         this.segments = segments;
     }
 
+    
     /**
      * Marks a part of the ship as hit.
      * @param {number} row - The row coordinate of the hit.
@@ -41,6 +42,7 @@ export class Ship {
         }
         return false;
     }
+
 
     /**
      * Checks if the ship is completely sunk.

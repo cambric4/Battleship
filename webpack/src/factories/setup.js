@@ -18,7 +18,7 @@ export function drawBoard(boardElement, gameBoard, isEnemy = false) {
             if (ship) {
                 cell.classList.add('ship');
             }
-
+            
             // Check if it's a hit (only for enemy board)
             if (isEnemy && ship && ship.isHitAt(row, col)) {
                 cell.classList.add('hit');
@@ -32,7 +32,6 @@ export function drawBoard(boardElement, gameBoard, isEnemy = false) {
         }
     }
 }
-
 
 let player = new Player('Player1');
 let enemyBoard = new GameBoard;

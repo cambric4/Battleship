@@ -1,11 +1,11 @@
-import { gameboardFactory, GameBoard, } from './factories/GB.js';
+import { gameboardFactory, GameBoard } from './factories/GB.js';
 import Player from "./factories/Player.js";
 import { Ship } from "./factories/ship.js";
 import './style.css';
 import { createBoard, setupPlayerBoard, drawBoard } from './factories/setup.js';
 
 // Create board and player instances
-const playerBoard = new gameboardFactory();
+const playerBoard = gameboardFactory();
 const enemyBoard = new GameBoard();
 const player = new Player("Player");
 const computer = new Player("Computer", true);
@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
   
     // Setup player board
     setupPlayerBoard(playerBoardElement, playerBoard);
-  
+
     // Render boards for both player and enemy (enemy board is initially hidden)
     function renderBoards() {
       createBoard(playerBoardElement, playerBoard.getBoard(), false); // Render the player board
@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   
     renderBoards(); // Ensure this is being called after DOM is loaded
-  
+    
     // Handle clicks on the enemy board (player attacking)
     function handleEnemyBoardClick(e) {
         if (!e.target.classList.contains("cell")) return;
@@ -53,15 +53,12 @@ document.addEventListener('DOMContentLoaded', function () {
             messageElement.textContent = "Miss! No ship at that spot!";
         }
     
-        // Re-render enemy board to reflect the hit/miss
-        drawBoard(enemyBoardElement, enemyBoard);
-    
         // Check if all enemy ships are sunk
         if (enemyBoard.allShipsSunk()) {
             messageElement.textContent = "You won! 🎉";
     
             // Reveal the enemy board once all ships are sunk
-            enemyBoardElement.style.display = "block"; // Show enemy board
+            //enemyBoardElement.style.display = "block"; // Show enemy board
     
             enemyBoardElement.removeEventListener("click", handleEnemyBoardClick);
             return;
@@ -72,7 +69,7 @@ document.addEventListener('DOMContentLoaded', function () {
             computerMove();
         }, 500);
     }
-      
+    
     // Computer makes a random move
     function computerMove() {
       let row, col, result;
@@ -97,30 +94,27 @@ document.addEventListener('DOMContentLoaded', function () {
         messageElement.textContent = "Computer missed!";
       }
   
-      // Re-render player board to reflect the hit/miss
-      drawBoard(playerBoardElement, playerBoard);
-  
       if (playerBoard.allShipsSunk()) {
         messageElement.textContent = "Computer wins! 💀";
         enemyBoardElement.removeEventListener("click", handleEnemyBoardClick);
-      }
+      } 
     }
   
     // Initialize game
     placeRandomShips(enemyBoard);
     renderBoards(); // Ensure this is being called
-  
+
     // Add event listener to handle player clicks on enemy board
     enemyBoardElement.addEventListener("click", handleEnemyBoardClick);
-  
-    function placeRandomShips(board) {
+
+   function placeRandomShips(board) {
       const shipsToPlace = [
         { name: "Carrier", length: 5 },
         { name: "Battleship", length: 4 },
         { name: "Destroyer", length: 3 },
         { name: "Submarine", length: 3 },
         { name: "Patrol Boat", length: 2 },
-      ];
+      ]
   
       for (const { name, length } of shipsToPlace) {
         let placed = false;
@@ -134,7 +128,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       }
     }
-  
+
     const resetButton = document.getElementById("reset-button");
   
     resetButton.addEventListener("click", () => {
@@ -148,7 +142,7 @@ document.addEventListener('DOMContentLoaded', function () {
         enemyBoard.clearBoard();
         messageElement.textContent = "";
   
-        placeRandomShips(playerBoard);
+        setupPlayerBoard(playerBoardElement, playerBoard);
         placeRandomShips(enemyBoard);
         renderBoards();
   
